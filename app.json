@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "langApp",
-    "slug": "langApp",
+    "name": "nomad_native_langapp",
+    "slug": "nomad_native_langapp",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ]
   },
-  "name": "langApp"
+  "name": "nomad_native_langapp"
 }
