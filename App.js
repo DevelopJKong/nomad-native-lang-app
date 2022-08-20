@@ -33,12 +33,23 @@ export default function App() {
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        console.log("Touch Started");
+        position.setOffset({
+          x: position.x._value,
+          y: position.y._value,
+        });
+      },
       onPanResponderMove: (_, { dx, dy }) => {
+        console.log("Finger Moving");
         position.setValue({
           x: dx,
           y: dy,
         });
+      },
+      onPanResponderRelease: () => {
+        console.log("Touch Finished");
+        position.flattenOffset();
       },
     })
   ).current;
@@ -50,7 +61,7 @@ export default function App() {
         style={{
           borderRadius,
           backgroundColor: bgColor,
-          transform: [...position.getTranslateTransform()],
+          transform: position.getTranslateTransform(),
         }}
       />
     </Container>
