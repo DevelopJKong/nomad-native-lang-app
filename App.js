@@ -22,23 +22,39 @@ const Card = styled(Animated.createAnimatedComponent(View))`
 `;
 
 const App = () => {
+  // Values
+  const scale = useRef(new Animated.Value(1)).current;
+  const position = useRef(new Animated.Value(0)).current;
+  const rotation = position.interpolate({
+    inputRange: [-250, 250],
+    outputRange: ["-15deg", "15deg"],
+  });
+  // Animations
+  const onPressOut = Animated.spring(scale, {
+    toValue: 1,
+    useNativeDriver: true,
+  });
+  const onPressIn = Animated.spring(scale, {
+    toValue: 0.95,
+    useNativeDriver: true,
+  });
+  const goCenter = Animated.spring(position, {
+    toValue: 0,
+    useNativeDriver: true,
+  });
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_, { dx }) => {
         position.setValue(dx);
       },
-      onPanResponderGrant: () => onPressIn(),
+      onPanResponderGrant: () => onPressIn.start(),
       onPanResponderRelease: () => {
-        Animated.parallel([onPressOut, Animated.spring(position, { toValue: 0, useNativeDriver: true })]).start();
+        Animated.parallel([onPressOut,goCenter]).start();
       },
     })
   ).current;
-  const onPressIn = () => Animated.spring(scale, { toValue: 0.95, useNativeDriver: true }).start();
-  const onPressOut = Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
-
-  const scale = useRef(new Animated.Value(1)).current;
-  const position = useRef(new Animated.Value(0)).current;
 
   return (
     <Container>
