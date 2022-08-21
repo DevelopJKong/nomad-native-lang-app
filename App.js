@@ -26,8 +26,9 @@ const App = () => {
   const scale = useRef(new Animated.Value(1)).current;
   const position = useRef(new Animated.Value(0)).current;
   const rotation = position.interpolate({
-    inputRange: [-250, 250],
+    inputRange: [-300, 300],
     outputRange: ["-15deg", "15deg"],
+    extrapolate: "clampe", //extend , identity
   });
   // Animations
   const onPressOut = Animated.spring(scale, {
@@ -50,8 +51,21 @@ const App = () => {
         position.setValue(dx);
       },
       onPanResponderGrant: () => onPressIn.start(),
-      onPanResponderRelease: () => {
-        Animated.parallel([onPressOut,goCenter]).start();
+      onPanResponderRelease: (_, { dx }) => {
+        if (dx < -250) {
+          Animated.spring(position, {
+            toValue: -500,
+            useNativeDriver: true,
+          }).start();
+        } else if (dx > 250) {
+          Animated.spring(position, {
+            toValue: 500,
+            useNativeDriver: true,
+          }).start();
+        } else {
+          console.log(dx);
+          Animated.parallel([onPressOut, goCenter]).start();
+        }
       },
     })
   ).current;
@@ -61,7 +75,7 @@ const App = () => {
       <Card
         {...panResponder.panHandlers}
         style={{
-          transform: [{ scale }, { translateX: position }],
+          transform: [{ scale }, { translateX: position }, { rotateZ: rotation }],
         }}
       >
         <Ionicons name="pizza" color="#192a56" size={98} />
