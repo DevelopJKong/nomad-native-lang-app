@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Animated, PanResponder } from "react-native";
 import icons from "./icons";
+
 const BLACK_COLOR = "#1e272e";
 const GREY = "#485460";
 const GREEN = "#2ecc71";
